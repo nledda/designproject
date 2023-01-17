@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+    <script src='main.js'></script>
+  </head>
+  <body>
+    <div id='wrapper'>
+      <h1>Title</h1>
+      <hr style='width:100%'>
+      &nbsp;Select Attribute:&nbsp;
+      <select id='attribute-input' onchange='drawLines();'>
+        <option value='Year'>Year</option>
+        <option value='Nachklausur'>Nachklausur</option>
+        <option value='Course'>Course</option>
+        <option value='AttemptNumber'>AttemptNumber</option>
+        <option value='Bachelor/Master'>Bachelor/Master</option>
+        <option value='Study'>Study</option>
+      </select>
+    </br>
+      <svg id='lineChart'></svg>
+    </div>
+    <div id="tooltip"></div>
+  </body>
+  </html>
