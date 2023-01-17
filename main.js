@@ -7,7 +7,7 @@ var data;
 var tooltip = d3.select("#tooltip").attr('opacity' , 0);
 
 
-d3.csv("DesignubungGradingData.csv").then(function(dataset) {
+d3.csv("https://raw.githubusercontent.com/nledda/designproject/main/DesignubungGradingData.csv").then(function(dataset) {
     
     data = dataset
     data.forEach(element => {
@@ -55,11 +55,19 @@ function drawLines(){
         return leaves.length;
       }).entries(data)
 
+      nest.forEach(element=>{
+        var totalNumber = d3.sum(element.values, function(d) { return d.value; })
+        element.values.forEach(d=>{
+          d.value = (d.value/totalNumber)*100
+        })
+        console.log(element.key, totalNumber)
+      })
+
       var max =  d3.max(nest, function(c) { return d3.max(c.values, function(d) { return d.value; }); })
 
     // Set the ranges
     var x = d3.scaleLinear().domain(d3.extent(data, function(d) { return +d.Grade; })).range([0, width]);
-    var y = d3.scaleLinear().domain([0,max]).range([height, 0]).nice()
+    var y = d3.scaleLinear().domain([0,25]).range([height, 0])
     var color = d3.scaleOrdinal(d3.schemeCategory10);  
 
     // Define the line
@@ -83,8 +91,7 @@ function drawLines(){
       // Add the Y Axis
    var yaxis = svg.append("g")
                 .attr("class", "y axis")
-                .call(d3.axisLeft(y)
-                    .tickPadding(6));
+                .call(d3.axisLeft(y).ticks(5));
 
     // Add a label to the y axis
     svg.append("text")
@@ -93,7 +100,7 @@ function drawLines(){
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Number of persons per grade")
+        .text("Percentage of people per grade")
         .attr("class", "y axis label");
 
 
@@ -123,7 +130,7 @@ function drawLines(){
             d3.select(this).style("cursor", "pointer").attr('r' , 7); 
             d3.select("#tooltip")
             .style('opacity' , 1)
-              .html(d.key  +"<br><b>Grade:</b> "+ e.key+"<br><b>Number of people:</b> "+ e.value  )
+              .html(d.key  +"<br><b>Grade:</b> "+ e.key+"<br><b>Number of people:</b> "+ e.value.toFixed(2)+'%'  )
               .style("left", ( d3.event.pageX)  +"px") 
               .style("top", (d3.event.pageY - 40) + "px")
               .style("fill-opacity","0.5")
